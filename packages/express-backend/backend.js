@@ -67,6 +67,27 @@ const users = {
   
   const findUserById = (id) =>
     users["users_list"].find((user) => user["id"] === id);
+
+  
+/* CURRENTLY NOT WORKING
+  const findUserByNameJob = (name, job) => {
+    return users["users_list"].filter(
+      (user) => user["name"] === name && user["job"] === job
+    );
+  }
+
+  app.get("/users/name/job", (req, res) => {
+    const name = req.query.name;
+    const job = req.query.job;
+    if (name !== undefined && job !== undefined) {
+      let result = findUserByNameJob(name, job);
+      result = { users_list: result };
+      res.send(result);
+    } else {
+      res.status(400).send("Bad Request: Missing query parameters.");
+    }
+  }
+  ); */
   
   app.get("/users/:id", (req, res) => {
     const id = req.params["id"]; //or req.params.id
@@ -88,3 +109,22 @@ const users = {
     addUser(userToAdd);
     res.send();
   });
+
+  const deleteUser = (userToDelete) => {
+    const index = users["users_list"].findIndex(user => user.id === userToDelete.id);
+    if (index !== -1) {
+      return users["users_list"].splice(index, 1)[0];
+    }
+    return null;
+  };
+  
+  app.delete("/users", (req, res) => {
+    const userToDelete = req.body;
+    const deletedUser = deleteUser(userToDelete);
+    if (deletedUser) {
+      res.send(deletedUser);
+    } else {
+      res.status(404).send({ error: "User not found" });
+    }
+  });
+  
