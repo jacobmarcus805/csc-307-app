@@ -68,14 +68,28 @@ const users = {
   const findUserById = (id) =>
     users["users_list"].find((user) => user["id"] === id);
 
+const findUserByJob = (job) => {
+    return users["users_list"].filter(
+      (user) => user["job"] === job
+    );
+  }
+  app.get("/users/job", (req, res) => {
+    const job = req.query.job;
+    if (job !== undefined) {
+      let result = findUserByJob(job);
+      result = { users_list: result };
+      res.send(result);
+    } else {
+      res.status(400).send("Job not found.");
+    }
+  });
   
-/* CURRENTLY NOT WORKING
   const findUserByNameJob = (name, job) => {
     return users["users_list"].filter(
       (user) => user["name"] === name && user["job"] === job
     );
-  }
-
+  };
+  
   app.get("/users/name/job", (req, res) => {
     const name = req.query.name;
     const job = req.query.job;
@@ -84,10 +98,10 @@ const users = {
       result = { users_list: result };
       res.send(result);
     } else {
-      res.status(400).send("Bad Request: Missing query parameters.");
+      res.status(400).send("Person with job not found.");
     }
-  }
-  ); */
+  });
+  
   
   app.get("/users/:id", (req, res) => {
     const id = req.params["id"]; //or req.params.id
