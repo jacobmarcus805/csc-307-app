@@ -15,19 +15,23 @@ function MyApp() {
   }, [] );
 
 
-  function updateList(person) { 
+  function updateList(person) {
     postUser(person)
       .then((res) => {
         if (res.status === 201) {
-          setCharacters([...characters, person]);
+          return res.json();
         } else {
-          console.log("Error: ", res.status);
+          throw new Error("Error: " + res.status);
         }
       })
+      .then((newUser) => {
+        setCharacters([...characters, newUser]);
+      })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   }
+  
   
 
   function removeOneCharacter(index) {
