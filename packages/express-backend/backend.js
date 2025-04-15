@@ -116,7 +116,12 @@ const findUserByJob = (job) => {
     }
   });
 
+  function generateRandomID() {
+    return Math.floor(Math.random()*1000000);
+  }
+
   const addUser = (user) => {
+    user.id = generateRandomID();
     users["users_list"].push(user);
     return user;
   };
@@ -124,7 +129,7 @@ const findUserByJob = (job) => {
   app.post("/users", (req, res) => {
     const userToAdd = req.body;
     addUser(userToAdd);
-    res.send();
+    res.status(201).send();
   });
 
   const deleteUser = (userToDelete) => {

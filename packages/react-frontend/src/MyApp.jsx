@@ -14,13 +14,21 @@ function MyApp() {
       .catch((error) => { console.log(error); });
   }, [] );
 
+
   function updateList(person) { 
     postUser(person)
-      .then(() => setCharacters([...characters, person]))
+      .then((res) => {
+        if (res.status === 201) {
+          setCharacters([...characters, person]);
+        } else {
+          console.log("Error: ", res.status);
+        }
+      })
       .catch((error) => {
         console.log(error);
-      })
+      });
   }
+  
 
   function removeOneCharacter(index) {
     const updated = characters.filter((character, i) => {
