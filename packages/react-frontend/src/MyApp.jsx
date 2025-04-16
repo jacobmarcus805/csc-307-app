@@ -35,11 +35,26 @@ function MyApp() {
   
 
   function removeOneCharacter(index) {
-    const updated = characters.filter((character, i) => {
-      return i !== index;
-    });
-    setCharacters(updated);
+    const userToDelete = characters[index];
+    fetch(`http://localhost:8000/users/${userToDelete.id}`, {
+      method: "DELETE",
+    })
+      .then((res) => {
+        if (res.status === 204) {
+          // Deletion was successful on the backend – update the state:
+          const updated = characters.filter((_, i) => i !== index);
+          setCharacters(updated);
+        } else if (res.status === 404) {
+          console.error("User not found on the backend.");
+        } else {
+          console.error("Delete failed with status: ", res.status);
+        }
+      })
+      .catch((error) => {
+        console.error("Error during deletion:", error);
+      });
   }
+  
 
   return (
     <div className="container">

@@ -140,11 +140,21 @@ const findUserByJob = (job) => {
     return null;
   };
   
-  app.delete("/users", (req, res) => {
+  /*app.delete("/users", (req, res) => {
     const userToDelete = req.body;
     const deletedUser = deleteUser(userToDelete);
     if (deletedUser) {
       res.send(deletedUser);
+    } else {
+      res.status(404).send({ error: "User not found" });
+    }
+  });*/
+
+  app.delete("/users/:id", (req, res) => {
+    const id = req.params.id;
+    const deletedUser = deleteUser({ id });
+    if (deletedUser) {
+      res.status(204).send(deletedUser);
     } else {
       res.status(404).send({ error: "User not found" });
     }
